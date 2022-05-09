@@ -1,3 +1,4 @@
+from typing import Optional
 from pydantic import BaseModel, EmailStr
 from datetime import datetime
 
@@ -29,3 +30,15 @@ class UserResponse(BaseModel):
     #config class is used to tell pandantic model to use other orm models other than dict
     class Config:
         orm_mode = True
+
+############ Pydantic model for User Login ##############
+class UserLogin(CreateUser):
+    pass
+
+################## pydantic model for access jwt token ###############
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+class TokenData(BaseModel):
+    id: Optional[str] = None

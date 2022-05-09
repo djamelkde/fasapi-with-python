@@ -5,7 +5,8 @@ from sqlalchemy.orm import Session
 from ..database import engine, get_db
 
 router = APIRouter(
-    prefix="/users"
+    prefix="/users",
+    tags=["Users"]
 )
 
 ########### API for users #############
