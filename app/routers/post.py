@@ -1,6 +1,7 @@
+from pyexpat import model
 from fastapi import Depends, FastAPI, Response, status, HTTPException, APIRouter
 from .. import models, schemas, utils, OAuth2
-from typing import List
+from typing import List, Optional
 from sqlalchemy.orm import Session
 from ..database import engine, get_db
 
@@ -20,10 +21,12 @@ def get_latest_post():
 
 #get all the posts
 @router.get("/", response_model=List[schemas.Post])
-def get_posts(db: Session = Depends(get_db), current_user = Depends(OAuth2.get_current_user)):
+def get_posts(db: Session = Depends(get_db), current_user = Depends(OAuth2.get_current_user), 
+              max_limit: int = 10, skip:int = 0, search: Optional[str] = ""):
     # cursor.execute("""SELECT * FROM posts""")
     # posts = cursor.fetchall()
-    posts = db.query(models.Post).all()
+    print(max_limit)
+    posts = db.query(models.Post).filter(models.Post.user_id == current_user.id).filter(models.Post.title.contains(search)).limit(max_limit).offset(skip).all()
     return posts
 
 #get a specific post using its id
@@ -35,6 +38,8 @@ def get_post(id: int, db: Session = Depends(get_db), current_user = Depends(OAut
     print(post)
     if not post:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"post with id: {id} does not exist")
+    if post.user_id != current_user.id:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authorized to perform requested actions")
     return post
 
 #POST methods
@@ -46,7 +51,7 @@ def create_posts(new_post: schemas.PostCreate, db: Session = Depends(get_db), cu
     # conn.commit()
     #print(**new_post.dict())
     #post = models.Post(title=new_post.title, content= new_post.content, published = new_post.published)
-    post = models.Post(**new_post.dict())
+    post = models.Post(user_id=current_user.id, **new_post.dict())
     db.add(post)
     db.commit()
     db.refresh(post)
@@ -64,6 +69,8 @@ def update_post(id: int, new_post: schemas.PostCreate, db: Session = Depends(get
     post = post_query.first()
     if post == None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"post with id: {id} does not exist")
+    if post.user_id != current_user.id:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authorized to perform requested actions")
     post_query.update(new_post.dict(), synchronize_session=False)
     db.commit()
     
@@ -77,8 +84,12 @@ def delete_post(id: int, db: Session = Depends(get_db), current_user = Depends(O
     # deleted_post = cursor.fetchone()
     # conn.commit()
     post_query = db.query(models.Post).filter(models.Post.id == id)
-    if post_query.first() == None:
+    post = post_query.first()
+    if post == None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"post with id: {id} does not exist")
+    if post.user_id != current_user.id:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authorized to perform requested actions")
+    
     post_query.delete(synchronize_session=False)
     db.commit()
     return Response(status_code=status.HTTP_204_NO_CONTENT)
