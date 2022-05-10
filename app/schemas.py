@@ -37,6 +37,10 @@ class Post(PostBase):
     class Config:
         orm_mode = True
 
+class PostResponse(BaseModel):
+    Post: Post
+    likes: int
+
 ################## pydantic model for Like ###############
 class Like(BaseModel):
     post_id: int
