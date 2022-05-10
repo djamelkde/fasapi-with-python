@@ -1,5 +1,5 @@
 from typing import Optional
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, conint
 from datetime import datetime
 
 ###### Pydantic model for user ############
@@ -36,6 +36,11 @@ class Post(PostBase):
     owner: UserResponse
     class Config:
         orm_mode = True
+
+################## pydantic model for Like ###############
+class Like(BaseModel):
+    post_id: int
+    dir: conint(le=1)
 
 ################## pydantic model for access jwt token ###############
 class Token(BaseModel):
