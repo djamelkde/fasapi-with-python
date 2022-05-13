@@ -34,7 +34,7 @@ def get_posts(db: Session = Depends(get_db), current_user = Depends(OAuth2.get_c
 
     posts = db.query(models.Post, func.count(models.Like.post_id).label("likes")).join(
                       models.Like, models.Like.post_id == models.Post.id, isouter=True).group_by(
-                      models.Post.id).filter(models.Post.user_id == current_user.id).filter(
+                      models.Post.id).filter(
                       models.Post.title.contains(search)).limit(max_limit).offset(skip).all()
     #print(results)
     return posts

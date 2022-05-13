@@ -8,12 +8,6 @@ from .config import settings
 
 
 
-#envar:
-#   #DB_PASSWORD
-#   #DB_USERNAME
-#   #DB_NAME
-#   #DB_URL
-
 #SQLALCHEMY_DATABASE_URL = "postgresql://<username>:<password>@<ip-address/hostname>:<port_number>/<database_name>"
 #SQLALCHEMY_DATABASE_URL = "postgresql://postgres:esiINIdjMI21@localhost:5433/fastapi"
 SQLALCHEMY_DATABASE_URL = f"postgresql://{settings.database_username}:{settings.database_password}@{settings.database_hostname}:{settings.database_port}/{settings.database_name}"

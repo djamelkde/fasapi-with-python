@@ -23,7 +23,5 @@ def login(user_credentials: OAuth2PasswordRequestForm = Depends(),  db: Session 
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Invalid credentials")
     
     #create a JWT Token
-    access_token = OAuth2.create_access_token(data = {"user_id": user.id})
-    #return token
-    print(access_token)   
-    return {"access_token": access_token["token"], "token_type": "bearer"}
+    access_token = OAuth2.create_access_token(data = {"user_id": user.id}) 
+    return {"access_token": str(access_token), "token_type": "bearer"}
