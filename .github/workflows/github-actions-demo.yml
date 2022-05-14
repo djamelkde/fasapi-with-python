@@ -4,13 +4,13 @@ on: [push, pull_request]
 #   DATABASE_HOSTNAME: localhost
 jobs:
   job1:
-    environement:
+    environment:
       name: testing
     env: #setting environement variables
       DATABASE_HOSTNAME: ${{secrets.DATABASE_HOSTNAME}}
       DATABASE_PORT: ${{secrets.DATABASE_PORT}}
       DATABASE_USERNAME: ${{secrets.DATABASE_USERNAME}}
-      DATABASE_USERNAME: ${{secrets.DATABASE_USERNAME}}
+      DATABASE_PASSWORD: ${{secrets.DATABASE_PASSWORD}}
       DATABASE_NAME: ${{secrets.DATABASE_NAME}}
       SECRET_KEY: ${{secrets.SECRET_KEY}}
       ALGORITHM: ${{secrets.ALGORITHM}}
