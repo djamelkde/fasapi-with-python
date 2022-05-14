@@ -26,15 +26,15 @@ def get_db():
         db.close()
 
 #connection to the database
-while True:
-    try:
-        conn = psycopg2.connect(host=settings.database_hostname, database=settings.database_name, user=settings.database_username, 
-                                port=settings.database_port, password=settings.database_password, cursor_factory=RealDictCursor)
-        cursor = conn.cursor()
-        print("database connection was successfull :)")
-        break
-    except Exception as error:
-        print("Connection to databse failed :(")
-        print("error: ", error)
-        time.sleep(2)
+# while True:
+#     try:
+#         conn = psycopg2.connect(host=settings.database_hostname, database=settings.database_name, user=settings.database_username, 
+#                                 port=settings.database_port, password=settings.database_password, cursor_factory=RealDictCursor)
+#         cursor = conn.cursor()
+#         print("database connection was successfull :)")
+#         break
+#     except Exception as error:
+#         print("Connection to databse failed :(")
+#         print("error: ", error)
+#         time.sleep(2)
 
